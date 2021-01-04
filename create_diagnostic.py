@@ -23,12 +23,12 @@ class DiagnosticReport:
                 # "reference": "Patient/" + str(self.patient_id)
                 "reference": "urn:uuid:" + str(self.patient_id)
             },
-            "performer": [
-                {
-                    "reference": "urn:uuid:" + str(self.patient_id),
-                    "display": "NCSIST Patient",
-                }
-            ],
+            # "performer": [
+            #     {
+            #         "reference": "urn:uuid:" + str(self.patient_id),
+            #         "display": "NCSIST Patient",
+            #     }
+            # ],
             "effectiveDateTime": self.date,
             "issued": self.date,
             "result": self.result,
@@ -56,10 +56,10 @@ class Observation:
                     "display": self.data.get('Name')
                 }]
             },
-            "text": {
-                "status": "generated",
-                "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">131329</div>"
-            },
+            # "text": {
+            #     "status": "generated",
+            #     "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">131329</div>"
+            # },
             # "performer": [
             #     {
             #         "reference": "urn:uuid:" + str(self.patient_id),
@@ -67,39 +67,41 @@ class Observation:
             #     }
             # ],
             "subject": {
+                "reference": "urn:uuid:" + str(self.patient_id),
                 # "reference": "Patient/" + str(self.patient_id)
-                "reference": "Patient/urn:uuid:" + str(self.patient_id)
+                # "reference": "Patient/" + str(self.patient_id)
             },
-            "effectivePeriod": {
-                "start": self.date
-            },
+            # "effectivePeriod": {
+            #     "start": self.date
+            # },
+            "effectiveDateTime": self.date,
             "issued": self.date,
         }
 
-        if self.data.get('Value') != "":
-            res["valueString"] = self.data.get('Value')
-        else:
-            res["valueString"] = "3"
-
-        # unit = self.data.get('Units')
-        # if unit == 0 or re.search("[\",',-,+,(,),a-z,A-Z]", self.data.get('Value')):
-        #     unit = ""
+        # if self.data.get('Value') != "":
         #     res["valueString"] = self.data.get('Value')
         # else:
-        #     if re.search("[\",',-,+,(,),a-z,A-Z]", self.data.get('Value')):
-        #         res["valueQuantity"] = {
-        #             "value": self.data.get('Value').replace("＊", ""),  #
-        #             "unit": unit,
-        #             "system": "http://unitsofmeasure.org"
-        #         }
-        #     else:
-        #         res["valueString"] = self.data.get('Value')
+        #     res["valueString"] = "3"
+
+        unit = self.data.get('Units')
+        if unit == 0 or re.search("[\",',-,+,(,),a-z,A-Z]", self.data.get('Value')):
+            unit = ""
+            res["valueString"] = self.data.get('Value')
+        else:
+            if re.search("[\",',-,+,(,),a-z,A-Z]", self.data.get('Value')):
+                res["valueQuantity"] = {
+                    "value": self.data.get('Value').replace("＊", ""),  #
+                    "unit": unit,
+                    "system": "http://unitsofmeasure.org"
+                }
+            else:
+                res["valueString"] = self.data.get('Value')
 
         return res
 
 
 class Observation_bundle:
-    def __init__(self, observation, method, url, uuid):
+    def __init__(self, observation, method, url,uuid):
         self.observation = observation
         self.method = method
         self.url = url

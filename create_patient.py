@@ -4,7 +4,12 @@ import names
 class Patient:
     def __init__(self, case, gender, birthdate):
         birthdate_list = birthdate[:-5].split("/")
-        self.id = case
+        self.case = case
+        self.identifier = [{
+            "use": "official",
+            "system": "HospitalID",
+            "value": case,
+        }]
         self.name = {
             "text": names.get_full_name(gender=gender)
         }
@@ -13,12 +18,12 @@ class Patient:
 
     def __str__(self):
         return 'Patient({0}, {1}, {2}, {3})'.format(
-            self.id, self.name, self.gender, self.birthDate)
+            self.identifier, self.name, self.gender, self.birthDate)
 
     def get_info(self):
         return {
             "resourceType": "Patient",
-            'id': self.id,
+            'identifier': self.identifier,
             'name': self.name,
             'gender': self.gender,
             'birthDate': self.birthDate,
@@ -42,6 +47,6 @@ class Patient_bundle:
             "request": {
                 "method": self.method,
                 "url": self.url,
-                # "ifNoneExist": "identifier=http://localhost:8080/fhir|12345"
+                # "ifNoneExist": "identifier=http://localhost:8080/fhir|"+
             }
         }

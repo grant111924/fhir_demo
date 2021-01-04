@@ -123,6 +123,7 @@ class csv_to_mysql:
 
 
 if __name__ == "__main__":
-    runner = csv_to_mysql(folderPath)
-    runner.main()
-    # main()
+    api.drop_all_data()
+    # runner = csv_to_mysql(folderPath)
+    # runner.main()
+    # main()delete_all_diagnostic_report

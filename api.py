@@ -22,7 +22,7 @@ def add_diagnostic_report(data):
 
 def add_bundle(data):
     # print("pre-send add bundle :", data)
-    return requests.post(_url("/?_pretty = true"), json=data)
+    return requests.post(_url("/?_format=json&_pretty=true"), json=data)
 
 
 def add_condtional_bundle():
@@ -30,16 +30,21 @@ def add_condtional_bundle():
 
 
 def drop_all_data():
-    return requests.post(_url("/DiagnosticReport/$expunge"), json={
+    return requests.post(_url("/$expunge"), json={
         "resourceType": "Parameters",
         "parameter": [
             {
-                "name": "expungeDeletedResources",
+                "name": "limit",
+                "valueInteger": 100000
+            },
+            {
+                "name": "expungeEverything",
                 "valueBoolean": True
-            }, {
-                "name": "expungePreviousVersions",
-                "valueBoolean": True
-            }
+            },
+            # {
+            #     "name": "expungePreviousVersions",
+            #     "valueBoolean": True
+            # }
         ]
     }
                          )
